@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/wetube");
+mongoose.connect(
+  "mongodb+srv://thebiwon:W5IBTQHxNojo8rJR@cluster0.eh0qujj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+);
 
 const db = mongoose.connection;
 
