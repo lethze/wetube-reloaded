@@ -14,14 +14,15 @@ app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 app.use(express.urlencoded({ extended: true }));
+
+console.log(process.env.COOKIE_SECRET);
 app.use(
   session({
-    secret: "Hello!",
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://thebiwon:W5IBTQHxNojo8rJR@cluster0.eh0qujj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+      mongoUrl: process.env.DB_URL,
     }),
   }),
 );
