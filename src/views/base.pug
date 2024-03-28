@@ -9,16 +9,16 @@ html(lang="ko")
             nav
                 ul
                     li
-                        a(href="/videos/upload") Upload Video
-                    li
                         a(href="/") Home
                     li
                         a(href="/Search") Search
                     if loggedIn
                         li
-                            a(href="/my-profile") #{loggedInUser.name}의 프로필
+                            a(href="/videos/upload") Upload Video
                         li
-                            a(href="/logout") Log out
+                            a(href="/users/edit") #{loggedInUser.name}의 프로필 수정
+                        li
+                            a(href="/users/logout") Log out
                     else
                         li
                             a(href="/join") Join
