@@ -130,20 +130,29 @@ export const finishGithubLogin = async (req, res) => {
     return res.redirect("/login");
   }
 };
+
 export const getEdit = (req, res) =>
   res.render("edit-profile", { pageTitle: "Edit Profile" });
+
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
   // const i = req.session.user.id 랑 같은 내용.
   // const { name, email, username, location } = req.body 도 한번에 해결.
   const updatedUser = await User.findOneAndUpdate(
     { _id },
-    { name, email, username, location },
+    {
+      avatarUrl: file ? file.path : avatarUrl,
+      name,
+      email,
+      username,
+      location,
+    },
     { new: true }, // 바뀐 정보를 updatedUser에 반환함.
   );
   req.session.user = updatedUser;
@@ -152,5 +161,39 @@ export const postEdit = async (req, res) => {
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
+};
+
+export const getChangePassword = async (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("change-password", { pageTitle: "Change Password" });
+};
+
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPassword2 },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password is incorrect.",
+    });
+  }
+  if (newPassword !== newPassword2) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The password confirmation doesn't match.",
+    });
+  }
+  user.password = newPassword;
+  await user.save();
+  // send notification
+  return res.redirect("/users/logout");
 };
 export const see = (req, res) => res.send("see");
