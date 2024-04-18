@@ -21,11 +21,11 @@ block content
                     i.fas.fa-expand
     h3 #{video.meta.views} #{video.meta.views === 1 ? "view" : "views"}
 
-    div
+    div.video__data
+        p.video__title=video.title
+        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-KR", options)
         small.video__owner Uploaded by&nbsp;
             a(href=`/users/${video.owner._id}`) #{video.owner.name}
-        br
-        small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-KR", options)
         p=video.description
 
     if String(video.owner.id) === String(loggedInUser._id)
@@ -33,9 +33,16 @@ block content
         br
         a(href=`${video.id}/delete`) Delete Video &rarr;
     if loggedIn
-        form.video__comment-form#commentForm
-            textarea(cols="30", rows="10", placeholder="Write a nice comment...")
-            button Add Comment
+        div.video__add-comments
+            form.video__comment-form#commentForm
+                textarea(cols="30", rows="10", placeholder="Write a nice comment...")
+                button Add Comment
+    div.video__comments
+        ul
+            each comment in video.comments.reverse()
+                li.video__comment
+                    i.fas.fa-comment
+                    span  #{comment.text}
 block scripts
     script(src="/assets/js/videoPlayer.js")
     script(src="/assets/js/commentSection.js")
