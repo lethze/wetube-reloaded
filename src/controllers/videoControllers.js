@@ -63,7 +63,6 @@ export const postUpload = async (req, res) => {
   const {
     user: { _id },
   } = req.session;
-  console.log(req.files);
   const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
   try {
@@ -145,5 +144,5 @@ export const createComment = async (req, res) => {
   });
   video.comments.push(comment._id);
   video.save();
-  return res.sendStatus(201); //Created
+  return res.status(201).json({ newCommentId: comment._id }); //Created
 };

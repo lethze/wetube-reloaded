@@ -9,8 +9,6 @@ module.exports = {
     recorder: BASE_JS + "recorder.js",
     commentSection: BASE_JS + "commentSection.js",
   },
-  mode: "development",
-  watch: true,
   plugins: [new MiniCssExtractPlugin({ filename: "styles/style.css" })],
   output: {
     filename: "js/[name].js",
